@@ -11,6 +11,10 @@ The main scientist-facing outputs are `sample_sheet.tsv`, `phenotype_mapping.tsv
 
 ## Workflow
 
+Use the default script-driven workflow for ordinary requests where the user just wants the final scientist-facing files. Use the LangGraph workflow when the user asks for a reviewable workflow, human-in-the-loop checkpoints, clearer intermediate decisions, resumable execution, or explicitly mentions LangGraph.
+
+### Default Script Workflow
+
 1. Create an output directory named after the input folder under `outputs/`.
 2. Ensure the local Python environment is available:
    - Run `scripts/ensure_env.py` from this skill directory when `.venv` is missing or Docling is not importable.
@@ -39,6 +43,44 @@ The main scientist-facing outputs are `sample_sheet.tsv`, `phenotype_mapping.tsv
 10. Write `reanalysis_report.md`:
    - Run `scripts/build_reanalysis_report.py` with sample sheet, phenotype mapping, NCBI metadata, LLM reading, and conversion manifest.
    - Prefer Markdown tables and readable prose over JSON.
+
+### LangGraph Workflow
+
+When LangGraph mode is appropriate, run:
+
+```bash
+python scripts/run_langgraph_workflow.py <input-folder> --output <output-folder>
+```
+
+Optional inputs:
+
+- `--llm-reading <llm_reading.json>` to import a completed Codex sub-agent reading pass.
+- `--ncbi-metadata <ncbi_metadata.json>` to resume from previously retrieved public metadata or avoid a network call during testing/review.
+
+The LangGraph workflow wraps the same helper logic used by the default workflow. It does not change the final scientist-facing output contract:
+
+- `sample_sheet.tsv`
+- `phenotype_mapping.tsv`
+- `reanalysis_report.md`
+
+It also writes internal/review artifacts:
+
+- `graph_state.json`
+- `review_accessions.md`
+- `review_sample_count.md`
+- `review_phenotype_mapping.md`
+
+Use these review packets for human-in-the-loop discussion. Present them to the scientist as concise review items, not as implementation details.
+
+Generate or call attention to human review when:
+
+- Regex and LLM accession findings disagree.
+- No BioProject is found.
+- Multiple accession candidates or low-confidence accession candidates are found.
+- The paper/supplement reported sample count differs from SRA run rows.
+- Phenotype rows are unmatched or low confidence.
+
+After human review, keep the scientist-facing files as the main deliverables. Do not silently overwrite accepted or rejected accession decisions if a future revision adds explicit decision storage.
 
 ## Sub-Agent Contract
 
