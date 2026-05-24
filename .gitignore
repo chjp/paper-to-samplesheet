@@ -1,0 +1,20 @@
+# Python virtual environments
+.venv/
+.venv-docling/
+__pycache__/
+*.pyc
+
+# Local package manager cache
+.uv-cache/
+
+# OS-specific files
+.DS_Store
+
+# Local test files
+papertest/
+
+# Generated output files
+outputs/
+
+# Others
+AGENTS.md
