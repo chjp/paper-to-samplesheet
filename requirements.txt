@@ -1,0 +1,6 @@
+biopython
+docling
+openpyxl
+pandas
+pytest
+pyyaml
