@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Convert paper PDFs and supplements into Codex-readable artifacts."""
+"""Convert paper PDFs and supplements into machine-readable artifacts."""
 
 from __future__ import annotations
 

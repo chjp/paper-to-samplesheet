@@ -11,7 +11,7 @@ from pathlib import Path
 
 
 def project_root() -> Path:
-    return Path(__file__).resolve().parents[3]
+    return Path(__file__).resolve().parents[1]
 
 
 def venv_python(root: Path) -> Path:
